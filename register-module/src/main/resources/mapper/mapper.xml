@@ -4,7 +4,7 @@
     <insert id="registerStudent" parameterType="com.imikasa.pojo.Student">
         insert into student_info values (#{stuNo},#{stuName},#{stuPassword},#{stuGender},#{stuPhone},#{stuBrith},#{stuImg})
     </insert>
-    <select id="findStudentById" resultType="com.imikasa.pojo.Student">
+    <select id="findStudentByName" resultType="com.imikasa.pojo.Student">
         select * from student_info where stu_name = #{stuName}
     </select>
 </mapper>

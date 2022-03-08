@@ -1,0 +1,8 @@
+com\imikasa\pojo\CommonResult.class
+com\imikasa\service\RegisterService.class
+com\imikasa\pojo\Student.class
+com\imikasa\controller\RegisterController.class
+com\imikasa\service\impl\RegisterServiceImpl.class
+com\imikasa\mapper\StudentMapper.class
+com\imikasa\RegisterApplication.class
+com\imikasa\config\MyWebMvcConfig.class
