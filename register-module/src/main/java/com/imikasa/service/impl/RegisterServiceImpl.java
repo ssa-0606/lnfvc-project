@@ -4,6 +4,7 @@ import com.imikasa.mapper.StudentMapper;
 import com.imikasa.pojo.CommonResult;
 import com.imikasa.pojo.Student;
 import com.imikasa.service.RegisterService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class RegisterServiceImpl implements RegisterService {
 
     @Resource
@@ -29,14 +31,13 @@ public class RegisterServiceImpl implements RegisterService {
         CommonResult<Student> commonResult = new CommonResult<Student>();
 
         if(student.getStuName()!=null&&student.getStuPassword()!=null&&student.getStuPhone()!=null){
-            Student students = studentMapper.findStudentByName(student.getStuName());
-            System.out.println(students);
-            if(student.getStuName().equals(students.getStuName())){
+            Student data_student = studentMapper.findStudentByName(student.getStuName());
+            log.info("传入参数为:"+student.getStuName()+" - 查出数据学生为："+data_student);
+            if(data_student!=null){
                 //用户名已经存在
                 commonResult.setCode(400);
                 commonResult.setMsg("用户名已经存在");
-                commonResult.setData(students);
-//                System.out.println(commonResult);
+                commonResult.setData(data_student);
                 return commonResult;
             }else{
                 int i = studentMapper.registerStudent(student);
@@ -50,7 +51,6 @@ public class RegisterServiceImpl implements RegisterService {
                     commonResult.setCode(400);
                     commonResult.setMsg("注册失败");
                     commonResult.setData(student);
-//                    System.out.println(commonResult);
                     return commonResult;
                 }
             }
@@ -59,8 +59,7 @@ public class RegisterServiceImpl implements RegisterService {
         commonResult.setCode(400);
         commonResult.setMsg("信息不得为空");
         commonResult.setData(null);
-//        System.out.println(commonResult);
-        return commonResult;
+        return commonResult; 
     }
 
     //学生进入数据库
@@ -77,7 +76,7 @@ public class RegisterServiceImpl implements RegisterService {
                 }
                 File target = new File(filePath,fileName);
                 file.transferTo(target);
-                student.setStuImg("/uploadview/stu_photoes/"+fileName);
+                student.setStuImg("/uploadview/temp/photos/"+fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -88,13 +87,17 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public Boolean checkName(String name) {
         Student stu_name = studentMapper.findStudentByName(name);
-        if(name.equals(stu_name)){
+        if(stu_name!=null){
             //数据库已有此用户，返回false，表示不可以用此用户名注册
             return false;
+        }else {
+            //没有此用户，返回true，可继续注册
+            return true;
         }
-        //没有此用户，返回true，可继续注册
-        return true;
+
     }
+
+
 
 
 }

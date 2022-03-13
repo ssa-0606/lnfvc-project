@@ -23,25 +23,24 @@ public class RegisterController {
 
     @GetMapping("/test")
     public String test(){
-        return "this is a test";
+        return "<h1>this is a test</h1>";
     }
 
+    // TODO: 2022/3/10 潜在bug,测试接口时，可能会发送同名用户的请求，但是程序会上传完图片，再去验证是否同名，前端有校验机制，必须控制所有条件均符合要求 
     //注册用户接口
     @PostMapping("/student")
     public CommonResult<Student> register(Student student, @RequestParam("file") MultipartFile file){
-//        System.out.println(student);
         // 设置ID ,并获取图片链接
         String uuid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
         student.setStuNo(uuid);
         student = registerService.initStudent(student, file);
-//        System.out.println(student);
         log.info("register info:"+student);
         return registerService.registerStudent(student);
     }
 
     //校验用户名是否已经注册
-    @GetMapping("/checkName")
-    public CommonResult<Boolean> checkName(String name){
+    @GetMapping("/checkName/{name}")
+    public CommonResult<Boolean> checkName(@PathVariable String name){
         Boolean aBoolean = registerService.checkName(name);
         CommonResult<Boolean> checked = new CommonResult<>();
         if(aBoolean){
@@ -55,6 +54,7 @@ public class RegisterController {
         }
         return checked;
     }
+
 
 
 }
