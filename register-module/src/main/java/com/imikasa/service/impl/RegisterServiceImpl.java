@@ -76,7 +76,7 @@ public class RegisterServiceImpl implements RegisterService {
                 }
                 File target = new File(filePath,fileName);
                 file.transferTo(target);
-                student.setStuImg("/uploadview/temp/photos/"+fileName);
+                student.setStuImg("/uploadview/photos/"+fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
